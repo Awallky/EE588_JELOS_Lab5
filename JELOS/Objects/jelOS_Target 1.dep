@@ -1,0 +1,84 @@
+Dependencies for Project 'jelOS', Target 'Target 1': (DO NOT MODIFY !)
+F (.\UART.c)(0x56E99BDC)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\uart.o --omf_browse .\objects\uart.crf --depend .\objects\uart.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588C2C04)
+I (UART.h)(0x56E6F1B2)
+I (tm4c123gh6pm.h)(0x54D0F112)
+F (.\startup.s)(0x5512C258)(--cpu Cortex-M4 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 524" --pd "TM4C123GH6PM SETA 1"--list .\listings\startup.lst --xref -o .\objects\startup.o --depend .\objects\startup.d)
+F (.\PLL.c)(0x56E6F1B2)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\pll.o --omf_browse .\objects\pll.crf --depend .\objects\pll.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588C2C04)
+I (PLL.h)(0x56E6F1B2)
+F (.\serialio.c)(0x59B59AC4)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\serialio.o --omf_browse .\objects\serialio.crf --depend .\objects\serialio.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x588C2C04)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588C2C04)
+I (UART.h)(0x56E6F1B2)
+F (.\shell.c)(0x59E1836A)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\shell.o --omf_browse .\objects\shell.crf --depend .\objects\shell.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x588C2C04)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588C2C04)
+I (mylib.h)(0x59E18FF3)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x588C2C04)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x588C2C04)
+I (inc/hw_memmap.h)(0x5453992E)
+I (driverlib/debug.h)(0x54539929)
+I (driverlib/gpio.h)(0x59D77332)
+I (driverlib/rom.h)(0x5453992A)
+I (driverlib/sysctl.h)(0x5453992A)
+I (jelos.h)(0x59DFA404)
+I (inc/hw_ints.h)(0x5453992E)
+I (inc/hw_nvic.h)(0x5453992E)
+I (inc/hw_types.h)(0x5453992E)
+I (driverlib/fpu.h)(0x54539929)
+I (driverlib/interrupt.h)(0x5453992A)
+I (driverlib/pin_map.h)(0x5453A11A)
+I (driverlib/systick.h)(0x5453992A)
+I (driverlib/uart.h)(0x5453992A)
+F (.\EdgeInterrupt.c)(0x57096D06)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\edgeinterrupt.o --omf_browse .\objects\edgeinterrupt.crf --depend .\objects\edgeinterrupt.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588C2C04)
+I (tm4c123gh6pm.h)(0x54D0F112)
+F (.\ostestmain.c)(0x59E18B53)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\ostestmain.o --omf_browse .\objects\ostestmain.crf --depend .\objects\ostestmain.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x588C2C04)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588C2C04)
+I (UART.h)(0x56E6F1B2)
+I (PLL.h)(0x56E6F1B2)
+I (jelos.h)(0x59DFA404)
+I (mylib.h)(0x59E18FF3)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x588C2C04)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x588C2C04)
+I (inc/hw_memmap.h)(0x5453992E)
+I (driverlib/debug.h)(0x54539929)
+I (driverlib/gpio.h)(0x59D77332)
+I (driverlib/rom.h)(0x5453992A)
+I (driverlib/sysctl.h)(0x5453992A)
+I (inc/hw_ints.h)(0x5453992E)
+I (inc/hw_nvic.h)(0x5453992E)
+I (inc/hw_types.h)(0x5453992E)
+I (driverlib/fpu.h)(0x54539929)
+I (driverlib/interrupt.h)(0x5453992A)
+I (driverlib/pin_map.h)(0x5453A11A)
+I (driverlib/systick.h)(0x5453992A)
+I (driverlib/uart.h)(0x5453992A)
+F (.\jelos.c)(0x59E19A97)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\jelos.o --omf_browse .\objects\jelos.crf --depend .\objects\jelos.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x588C2C04)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588C2C04)
+I (jelos.h)(0x59DFA404)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x588C2C04)
+I (C:\Keil_v5\ARM\ARMCC\include\time.h)(0x588C2C04)
+I (mylib.h)(0x59E18FF3)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x588C2C04)
+I (inc/hw_memmap.h)(0x5453992E)
+I (driverlib/debug.h)(0x54539929)
+I (driverlib/gpio.h)(0x59D77332)
+I (driverlib/rom.h)(0x5453992A)
+I (driverlib/sysctl.h)(0x5453992A)
+I (inc/hw_ints.h)(0x5453992E)
+I (inc/hw_nvic.h)(0x5453992E)
+I (inc/hw_types.h)(0x5453992E)
+I (driverlib/fpu.h)(0x54539929)
+I (driverlib/interrupt.h)(0x5453992A)
+I (driverlib/pin_map.h)(0x5453A11A)
+I (driverlib/systick.h)(0x5453992A)
+I (driverlib/uart.h)(0x5453992A)
+F (.\jelosASM.s)(0x59E1861B)(--cpu Cortex-M4 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-IC:\Keil_v5\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 524" --pd "TM4C123GH6PM SETA 1"--list .\listings\jelosasm.lst --xref -o .\objects\jelosasm.o --depend .\objects\jelosasm.d)
+F (.\UART.h)(0x56E6F1B2)()
+F (.\tm4c123gh6pm.h)(0x54D0F112)()
+F (.\PLL.h)(0x56E6F1B2)()
+F (.\jelos.h)(0x59DFA404)()
