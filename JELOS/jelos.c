@@ -35,7 +35,8 @@ int StartScheduler(void)
 	OS_Sem_Init(sem, 1);
 	PortF_Init();
 	SysTick_Init();
-	EdgeCounter_Init();           // initialize GPIO Port F interrupt OR SysTick OR ...
+	EnableInterrupts();
+	//EdgeCounter_Init();           // initialize GPIO Port F interrupt OR SysTick OR ...
 	
   NullTask();                   // Will not return
 	return 0;	 
@@ -150,10 +151,10 @@ void SysTick_Init(void){
 		ROM_SysTickIntEnable(); 
 }
 
-void SysTick_Handler(void){   
-	ROM_GPIOPinWrite(PORTF_BASE_ADDR, PIN_2 ,  
-	~(ROM_GPIOPinRead(PORTF_BASE_ADDR, PIN_2)) );  // toggle PF2 (Blue LED) 
-}
+//void SysTick_Handler(void){   
+//	ROM_GPIOPinWrite(PORTF_BASE_ADDR, PIN_2 ,  
+//	~(ROM_GPIOPinRead(PORTF_BASE_ADDR, PIN_2)) );  // toggle PF2 (Blue LED) 
+//}
 	
 //
 // AMW

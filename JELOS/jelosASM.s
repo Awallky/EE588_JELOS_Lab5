@@ -26,6 +26,7 @@ INT_COUNT SPACE 4
 		
 	EXPORT GPIOPortF_Handler
 	EXPORT StartNewTask
+	EXPORT SysTick_Handler
 ;	EXPORT OS_Suspend
 		
 GPIOPortF_Handler
@@ -72,8 +73,7 @@ task_exit
 	b	task_exit ; if a task ever returns it 
 	              ; gets stuck here for debugging
 	
-	ALIGN ; make sure the end of this section is aligned (For the code/data to follow)
-	END ; mark end of file
+	ALIGN ; make sure the end of this section is aligned (For the code/data to follow
 
 ;;
 ;; AMW
@@ -86,7 +86,10 @@ SysTick_Handler
  pop {r4-r11}
  ldr lr,=INTERRUPT_LR
  bx lr ; context switch!
+ 
+ ALIGN ; make sure the end of this section is aligned (For the code/data to follow)
+ END ; mark end of file
 
-OS_Suspend
- orr SYSTICK_CTL_R, #0x02
- bx lr
+;OS_Suspend
+; orr SYSTICK_CTL_R, #0x02
+; bx lr
