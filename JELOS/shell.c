@@ -10,6 +10,7 @@
 
 void prmsg(char *);
 int strcmp(const char *s1, const char *s2);
+extern unsigned int *sem;
 
 // -----------------------------------------------------------------
 // SHELL BUILT_IN FUNCTIONS
@@ -108,8 +109,11 @@ void  shell(void)
      ROM_GPIOPinWrite(GPIO_PORTF_BASE, 
 											GPIO_PIN_3 |GPIO_PIN_2 | GPIO_PIN_1,
 											0); // All LEDs off
+		 
      while (1) {                   /* repeat until done ....         */
+					OS_Sem_Wait(sem);
           printf("jelos# ");     /*   display a prompt             */
+					OS_Sem_Signal(sem);
 		      gets(line);          // get a line from the user
           parse(line, argv);       /*   parse the line               */
           if (strcmp(argv[0], "exit") == 0 || strcmp(argv[0], "quit") == 0 ) {
@@ -117,27 +121,42 @@ void  shell(void)
                 printf("Exiting...\n");
 				return;        
 	      } else if (strcmp(argv[0], "time") == 0){
+						OS_Sem_Wait(sem);
 						time();
+						OS_Sem_Signal(sem);
 					}
 					else if (strcmp(argv[0], "ps") == 0){
+						OS_Sem_Wait(sem);
 						ps();
+						OS_Sem_Signal(sem);
 					}
 	        else if (strcmp(argv[0], "settime") == 0){
+						OS_Sem_Wait(sem);
 						settime(argv[1]);
+						OS_Sem_Signal(sem);
 					}
           else if (strcmp(argv[0], "temp") == 0){
+						OS_Sem_Wait(sem);
 						temp();
+						OS_Sem_Signal(sem);
 					}
 					else if (strcmp(argv[0], "i") == 0){
+						OS_Sem_Wait(sem);
 						puts("an i\n");
+						OS_Sem_Signal(sem);
 					}
 					else if (*argv[0] != 0 && argv[0] != 0){
+						OS_Sem_Wait(sem);
 						execute(argv);    /* if not empy line execute command as new process*/
+						OS_Sem_Signal(sem);
 					}
-					else{	
+					else{
+						OS_Sem_Wait(sem);
 						putchar('\n');
+						OS_Sem_Signal(sem);
 					}
      }//while(1)
+		 
 }
 
 // -----------------------------------------------------------------

@@ -174,7 +174,7 @@ void ps(void){
 	}
 	
 	/* Print contents of task list */
-	OS_Sem_Wait(sem);
+	//OS_Sem_Wait(sem);
 	
 	/*
 			PROTECTED SHARED RESOURCE (UART)
@@ -205,7 +205,7 @@ void ps(void){
 	/*
 			PROTECTED SHARED RESOURCE (UART)
 	*/
-	OS_Sem_Signal(sem);
+	//OS_Sem_Signal(sem);
 }
 
 

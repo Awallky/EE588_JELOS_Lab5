@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\jelos.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\jelos.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Sat Oct 14 02:46:05 2017
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Sat Oct 14 12:06:26 2017
 <BR><P>
 <H3>Maximum Stack Usage =        176 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -607,16 +607,16 @@ Global Symbols
 <P><STRONG><a name="[cc]"></a>__rt_final_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry11a.o(.ARM.Collect$$$$0000000F))
 
 <P><STRONG><a name="[a4]"></a>DisableInterrupts</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, startup.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Wait
+<BR><BR>[Called By]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Init
+<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Wait
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Signal
-<LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Init
 </UL>
 
 <P><STRONG><a name="[a2]"></a>EnableInterrupts</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, startup.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Wait
-<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Signal
-<LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Init
+<BR><BR>[Called By]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Init
 <LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EdgeCounter_Init
+<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Wait
+<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Signal
 </UL>
 
 <P><STRONG><a name="[cd]"></a>StartCritical</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, startup.o(.text), UNUSED)
@@ -844,7 +844,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EnableInterrupts
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisableInterrupts
 </UL>
-<BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ps
+<BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shell
 </UL>
 
 <P><STRONG><a name="[a6]"></a>OS_Sem_Wait</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, jelos.o(i.OS_Sem_Wait))
@@ -854,7 +854,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EnableInterrupts
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisableInterrupts
 </UL>
-<BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ps
+<BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shell
 </UL>
 
 <P><STRONG><a name="[83]"></a>One</STRONG> (Thumb, 46 bytes, Stack size 0 bytes, ostestmain.o(i.One))
@@ -1030,17 +1030,14 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;execute
 </UL>
 
-<P><STRONG><a name="[be]"></a>ps</STRONG> (Thumb, 290 bytes, Stack size 64 bytes, jelos.o(i.ps))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88 + Unknown Stack Size
-<LI>Call Chain = ps &rArr; __2printf
+<P><STRONG><a name="[be]"></a>ps</STRONG> (Thumb, 274 bytes, Stack size 64 bytes, jelos.o(i.ps))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = ps &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 <LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
-<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Wait
-<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Signal
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shell
@@ -1076,7 +1073,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shell
 </UL>
 
-<P><STRONG><a name="[81]"></a>shell</STRONG> (Thumb, 200 bytes, Stack size 88 bytes, shell.o(i.shell))
+<P><STRONG><a name="[81]"></a>shell</STRONG> (Thumb, 328 bytes, Stack size 88 bytes, shell.o(i.shell))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176 + Unknown Stack Size
 <LI>Call Chain = shell &rArr; ps &rArr; __2printf
 </UL>
@@ -1084,6 +1081,8 @@ Global Symbols
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;putc
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;puts
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ps
+<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Wait
+<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Sem_Signal
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;time
 <LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;temp
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;settime
