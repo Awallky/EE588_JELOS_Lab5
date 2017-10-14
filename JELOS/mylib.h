@@ -87,4 +87,7 @@ void OS_Sem_Init(unsigned int *s, unsigned int count);
 void OS_Sem_Signal(unsigned int *sem);
 void OS_Sem_Wait(unsigned int *sem);
 float get_percent_cpu(void);
+
+#define TICKS_PER_S	50000000
+
 #endif

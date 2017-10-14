@@ -14,6 +14,8 @@ static TaskControlBlock task_list[NUM_TASKS], *TASK_LIST_PTR;
 static TaskControlBlock *CURRENT_TASK;
 unsigned int *sem;
 int i;
+clock_t start, end;
+double cpu_time_used;
 
 static int NEXT_TID;
 static unsigned char null_task_stack[60];  // is not used, null task uses original system stack
@@ -65,6 +67,7 @@ int CreateTask(void (*func)(void),
 	       /* stack grows from high address to low address */
 	p->stack_start = stack_start;
 	p->stack_end = stack_start+stack_size-1;
+	//p->stack_size = stack_size;
 	
 	p->sp = p->stack_end;
 	p->clk_ticks = 0;
@@ -117,16 +120,20 @@ unsigned char * Schedule(unsigned char * the_sp)
                // save the current sp and schedule
 	 
 		
-		
-	 CURRENT_TASK->clk_ticks += ROM_SysTickValueGet();
+	 //CURRENT_TASK->clk_ticks = (ROM_SysTickValueGet();
 	 CURRENT_TASK->sp = the_sp;
 	 CURRENT_TASK->state = T_READY;
 	 CURRENT_TASK = CURRENT_TASK->next;	 
 
 	 if (CURRENT_TASK->state == T_READY){
 		  CURRENT_TASK->state = T_RUNNING;
-		  CURRENT_TASK->clk_ticks = 0;
 	    sp = CURRENT_TASK->sp;    
+		 
+			for(i = 0; i < NUM_TASKS-1; i ++){
+					
+						CURRENT_TASK->next->clk_ticks = (ROM_SysTickPeriodGet() - ROM_SysTickValueGet() - CURRENT_TASK->clk_ticks);
+						CURRENT_TASK = CURRENT_TASK->next;
+			}
 	 } else {     /* task->state == T_CREATED so make it "ready" 
 	                give it an interrupt frame and then launch it 
 	    		        (with a blr sith 0xfffffff9 in LR in StartNewTask())  */
@@ -160,19 +167,16 @@ void SysTick_Init(void){
 // AMW
 //
 void ps(void){ 
-	int i, total_num_ticks, stack_size = 0;
+	int i, stack_size = 0;
 	float percent_cpu, percent_stack = 0.0;
+	unsigned int total_num_ticks;
 	
-	/* Get percent_cpu */
-	for( i = 0; i < NUM_TASKS; i++ ){
-		if( CURRENT_TASK->tid != 0){
-			total_num_ticks += CURRENT_TASK->clk_ticks;			
-		}
+	for(i = 0; i < NUM_TASKS; i++ ){
+		//printf("ticks: %u\n", CURRENT_TASK->clk_ticks);
+		total_num_ticks += CURRENT_TASK->clk_ticks;		
 		CURRENT_TASK = CURRENT_TASK->next;
 	}
-	if( total_num_ticks == 0 ){
-		total_num_ticks = 1;
-	}
+	
 	
 	/* Print contents of task list */
 	//OS_Sem_Wait(sem);
@@ -182,27 +186,27 @@ void ps(void){
 	*/	
 	printf("\nUSER\tTID\tTICKS\t\t%%CPU\tSTK_SZ\t%%STK\tSTATE\t\tADDR\n");
 	for( i = 0; i < NUM_TASKS; i++ ){
-			if( CURRENT_TASK->tid != 0 ){
+			if(CURRENT_TASK->tid != 0){
 				stack_size = (CURRENT_TASK->stack_end-CURRENT_TASK->stack_start+1);
-				percent_stack = (float)((CURRENT_TASK->stack_end-CURRENT_TASK->sp)/(stack_size+1));
-				
-				percent_cpu = (float)(((float)CURRENT_TASK->clk_ticks/(float)total_num_ticks)*100);
-				printf("root\t%02d\t%08d\t%02.1f%%\t%02d\t%02.1f\t",
-							 CURRENT_TASK->tid,
-							 CURRENT_TASK->clk_ticks,
-							 percent_cpu,
-							 stack_size,
-							 percent_stack);
+				percent_cpu =	 (((float) (CURRENT_TASK->clk_ticks)) / total_num_ticks)*100.0;
+				percent_stack = (((float)(CURRENT_TASK->stack_end-CURRENT_TASK->sp))/stack_size)*100.0;
+				printf("ROOT\t");
+				printf("%02d\t", CURRENT_TASK->tid);
+				printf("%08u\t", CURRENT_TASK->clk_ticks);
+				printf("%02.1f\t\n", percent_cpu);
+				printf("%d\t", (stack_size));
+				printf("%02.1f\t", percent_stack);
 				
 				if( CURRENT_TASK->state == T_READY ){
-					printf("RDY\t\t0x%p\n", CURRENT_TASK->sp);
+					printf("RDY\t\t0x%p\n", CURRENT_TASK);
 				}
 				else if( CURRENT_TASK->state == T_RUNNING ){
-					printf("RUN\t\t0x%p\n", CURRENT_TASK->sp);
+					printf("RUN\t\t0x%p\n", CURRENT_TASK);
 				}
 			}
 			CURRENT_TASK = CURRENT_TASK->next;
-	}
+		}
+			
 	/*
 			PROTECTED SHARED RESOURCE (UART)
 	*/
@@ -264,10 +268,10 @@ __asm void OS_Suspend(void){
 */
 
 float ticks_since_last_call(void){
-	clock_t start, end;
-	double cpu_time_used;
+	
+	
 
-	start = clock();
+	
 	/* Do the work. */
 	end = clock();
 	return (cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC);

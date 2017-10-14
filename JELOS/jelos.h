@@ -48,6 +48,7 @@ typedef struct TaskControlBlock
 	void	(*func)(void);		/* function to call for that task */
 	unsigned char	*stack_start;		/* stack low value */
 	unsigned char	*stack_end;			/* stack high value */
+	//uint32_t	stack_size; 	/* stack high value */
 	unsigned char	*sp;		/* current value of the stack pointer */
 	uint32_t clk_ticks;
 	char *blocked; /* Determines whether the task is blocked // AMW // */
