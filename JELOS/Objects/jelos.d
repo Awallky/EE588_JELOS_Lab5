@@ -1,7 +1,6 @@
 .\objects\jelos.o: jelos.c
 .\objects\jelos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\jelos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\objects\jelos.o: jelos.h
 .\objects\jelos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\jelos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\time.h
 .\objects\jelos.o: mylib.h
@@ -11,6 +10,7 @@
 .\objects\jelos.o: driverlib/gpio.h
 .\objects\jelos.o: driverlib/rom.h
 .\objects\jelos.o: driverlib/sysctl.h
+.\objects\jelos.o: jelos.h
 .\objects\jelos.o: inc/hw_ints.h
 .\objects\jelos.o: inc/hw_nvic.h
 .\objects\jelos.o: inc/hw_types.h

@@ -156,7 +156,22 @@ ARM Macro Assembler    Page 3
                                                              aligned (For the c
                                                             ode/data to follow)
                                                             
-   91 0000006C                 END                          ; mark end of file
+   91 0000006C         
+   92 0000006C         
+   93 0000006C         ;OS_Suspend
+   94 0000006C         ; ldr r0,=SYSTICK_CTL_R
+   95 0000006C         ; ;orr SYSTICK_CTL_R, #0x02
+   96 0000006C         ; ldr r1, [r0]
+   97 0000006C         ; orr r1, #0x02
+   98 0000006C         ; str [r0], r1
+   99 0000006C         ; bx lr
+  100 0000006C         
+  101 0000006C                 ALIGN                        ; make sure the end
+                                                             of this section is
+                                                             aligned (For the c
+                                                            ode/data to follow)
+                                                            
+  102 0000006C                 END                          ; mark end of file
               4002541C 
               00000000 
               00000000 

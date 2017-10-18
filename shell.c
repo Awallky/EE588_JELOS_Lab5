@@ -3,12 +3,16 @@
 // James E. lumpp Jr.  
 // 4/9/2016
 //
-#include "mylib.h"
+
 #include <stdio.h>
 #include <stdint.h>
 
+
 void prmsg(char *);
 int strcmp(const char *s1, const char *s2);
+void ps(void);
+void DisableInterrupts(void);
+void EnableInterrupts(void);
 
 // -----------------------------------------------------------------
 // SHELL BUILT_IN FUNCTIONS
@@ -104,7 +108,7 @@ void  shell(void)
      char  line[40] = {0};          /* the input line init all chars to zero  */
      char  *argv[10] = {0};              /* the command line argument      */
 //	 unsigned char i;
-
+     
      while (1) {                   /* repeat until done ....         */
           printf("jelos# ");     /*   display a prompt             */
 		      gets(line);          // get a line from the user
@@ -115,23 +119,33 @@ void  shell(void)
 				return;
 
 				//exit(0);            
-	      } else if (strcmp(argv[0], "time") == 0)
+	      }
+				else if (strcmp(argv[0], "time") == 0){
 		      time();   //time(argv[1]);
-					else if (strcmp(argv[0], "ps") == 0){
-						//DisableInterrupts();
-						ps();
-						//EnableInterrupts();
-					}
-	        else if (strcmp(argv[0], "settime") == 0)
+				}
+				else if( (strcmp(argv[0], "ps") == 0)  ||
+							   (strcmp(argv[0], "ps ") == 0) || 
+									(strcmp(argv[0], " ps") == 0) ){
+										DisableInterrupts();
+										ps();
+										EnableInterrupts();
+										//printf("ps\n");
+									}
+	      else if (strcmp(argv[0], "settime") == 0){
 		      settime(argv[1]);   //settime(argv[1]);
-          else if (strcmp(argv[0], "temp") == 0)
+				}
+        else if (strcmp(argv[0], "temp") == 0){
 		      temp();   //temp(argv[1]);
-					else if (strcmp(argv[0], "i") == 0)
+				}
+				else if (strcmp(argv[0], "i") == 0){
 		      puts("an i\n");   //
-					else if (*argv[0] != 0 && argv[0] != 0) 
+				}
+				else if (*argv[0] != 0 && argv[0] != 0) {
 		      execute(argv);    /* if not empy line execute command as new process*/
-					else	
+				}
+				else	{
 					putchar('\n');
+				}
      }//while(1)
 }
 

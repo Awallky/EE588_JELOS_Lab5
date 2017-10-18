@@ -47,7 +47,7 @@ char *
          register int ch;
          register char *ptr;
          ptr = s;
-         while ((ch = getchar()) != '\r' && (ch != '\n'))
+         while ((ch = getchar()) != '\r')
                  *ptr++ = ch;
  
          *ptr = '\0';  // null terminate the string

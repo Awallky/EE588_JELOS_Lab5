@@ -53,6 +53,4 @@ typedef struct TaskControlBlock
 	uint32_t clk_ticks;
 	char *blocked; /* Determines whether the task is blocked // AMW // */
 	} TaskControlBlock;
-
-
 #endif

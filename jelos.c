@@ -5,7 +5,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
-//#include "jelos.h"
+#include "jelos.h"
 #include <stdio.h>
 #include <time.h>
 #include "mylib.h"
@@ -14,10 +14,8 @@ static TaskControlBlock task_list[NUM_TASKS], *TASK_LIST_PTR;
 static TaskControlBlock *CURRENT_TASK;
 unsigned int *sem;
 int i;
-int stack_size[5], task_ticks[5], stack_array[5], stack_start_array[5], stack_end_array[5];
-float percent_cpu[5], percent_stack[5];
-unsigned int total_num_ticks = 1;
-unsigned int ticks = 50000000;
+clock_t start, end;
+double cpu_time_used;
 
 static int NEXT_TID;
 static unsigned char null_task_stack[60];  // is not used, null task uses original system stack
@@ -29,7 +27,6 @@ void OS_Sem_Init(unsigned int *sem, unsigned int count);
 void OS_Sem_Signal(unsigned int *sem);
 void OS_Sem_Wait(unsigned int *sem);
 void OS_Suspend(void);
-float ticks_since_last_call(void);
 
             /* Start the multi-tasking system */
 int StartScheduler(void)
@@ -37,7 +34,6 @@ int StartScheduler(void)
 	if (CURRENT_TASK == NULL)
 		return -1;
 	OS_Sem_Init(sem, 1);
-	ROM_FPULazyStackingEnable();
 	PortF_Init();
 	SysTick_Init();
 	EnableInterrupts();
@@ -47,8 +43,9 @@ int StartScheduler(void)
 	return 0;	 
 	}
 
-/* Create a new process and link it to the task list
- */
+/*
+	Create a new process and link it to the task list 
+*/
 int CreateTask(void (*func)(void), 
                     unsigned char *stack_start,
                     unsigned stack_size)
@@ -96,7 +93,7 @@ static void InitSystem(void)
 	TASK_LIST_PTR = &task_list[0];
 
 	         /* null task has tid of 0 */
-	CreateTask(NullTask, null_task_stack, sizeof (null_task_stack));
+	CreateTask(NullTask, null_task_stack, sizeof(null_task_stack));
 	}
 
 
@@ -120,46 +117,27 @@ static void NullTask(void)
 unsigned char * Schedule(unsigned char * the_sp)  
 	{
 		unsigned char * sp; // save the current sp and schedule
-//		float f_stack_end, f_sp;		
-		unsigned int period = ROM_SysTickPeriodGet();
-		unsigned int val = ROM_SysTickValueGet();
-		total_num_ticks = 0;
 		
-	 CURRENT_TASK->clk_ticks = period - val + CURRENT_TASK->clk_ticks;
+	 //CURRENT_TASK->clk_ticks = (ROM_SysTickValueGet();
 	 CURRENT_TASK->sp = the_sp;
 	 CURRENT_TASK->state = T_READY;
-	 
 	 CURRENT_TASK = CURRENT_TASK->next;	 
 
 	 if (CURRENT_TASK->state == T_READY){
 		  CURRENT_TASK->state = T_RUNNING;
 	    sp = CURRENT_TASK->sp;    
-			CURRENT_TASK->clk_ticks = 0;
+		 
+			for(i = 0; i < NUM_TASKS-1; i ++){
+					
+						CURRENT_TASK->next->clk_ticks = (ROM_SysTickPeriodGet() - ROM_SysTickValueGet() - CURRENT_TASK->clk_ticks);
+						CURRENT_TASK = CURRENT_TASK->next;
+			}
 	 } else {     /* task->state == T_CREATED so make it "ready" 
 	                give it an interrupt frame and then launch it 
 	    		        (with a blr sith 0xfffffff9 in LR in StartNewTask())  */
 		  CURRENT_TASK->state = T_RUNNING;
 			sp = StartNewTask(CURRENT_TASK->sp,(uint32_t) CURRENT_TASK->func); // Does not return!
 		}
-		
-		for(i = 0; i < NUM_TASKS; i++ ){
-			total_num_ticks += ((float)CURRENT_TASK->clk_ticks)/(float)ticks;
-		}
-		for(i = 0; i < NUM_TASKS; i++ ){
-			//f_stack_end = (int)CURRENT_TASK->stack_end;
-			//f_sp = (int)CURRENT_TASK->sp;
-			//printf("ticks: %u\n", CURRENT_TASK->clk_ticks);
-			task_ticks[CURRENT_TASK->tid] = CURRENT_TASK->clk_ticks;	
-			stack_array[CURRENT_TASK->tid] = (int)CURRENT_TASK->sp;	
-			stack_end_array[CURRENT_TASK->tid] = (int)CURRENT_TASK->stack_end;
-			stack_start_array[CURRENT_TASK->tid] = (int)CURRENT_TASK->stack_start;
-			stack_size[CURRENT_TASK->tid] = (stack_end_array[CURRENT_TASK->tid]-stack_start_array[CURRENT_TASK->tid]+1);
-			percent_cpu[CURRENT_TASK->tid] =	 ((float)task_ticks[CURRENT_TASK->tid] * 100.0) / ((float)total_num_ticks); // / (float)total_num_ticks;
-			percent_stack[CURRENT_TASK->tid] = (float)((stack_end_array[CURRENT_TASK->tid]-stack_array[CURRENT_TASK->tid])*100.0)/ stack_size[CURRENT_TASK->tid];
-			
-			CURRENT_TASK = CURRENT_TASK->next;
-		}
-		
 		return(sp);
 	}
 
@@ -183,39 +161,57 @@ void SysTick_Init(void){
 //	~(ROM_GPIOPinRead(PORTF_BASE_ADDR, PIN_2)) );  // toggle PF2 (Blue LED) 
 //}
 	
+//
+// AMW
+//
 void ps(void){ 
+	int i, stack_size = 0;
+	float percent_cpu, percent_stack = 0.0;
+	unsigned int total_num_ticks;
+	
+	//DisableInterrupts();
+	
+	for(i = 0; i < NUM_TASKS; i++){
+		total_num_ticks += CURRENT_TASK->clk_ticks;		
+		CURRENT_TASK = CURRENT_TASK->next;
+	}
+	
 	
 	/* Print contents of task list */
-	//OS_Sem_Wait(sem);
 	
 	/*
 			PROTECTED SHARED RESOURCE (UART)
-	*/
-	
+	*/	
 	printf("\nUSER\tTID\tTICKS\t\t%%CPU\tSTK_SZ\t%%STK\tSTATE\t\tADDR\n");
 	for( i = 0; i < NUM_TASKS; i++ ){
-			//if(CURRENT_TASK->tid != 0){
+			if(CURRENT_TASK->tid != 0){
+				stack_size = (CURRENT_TASK->stack_end-CURRENT_TASK->stack_start+1);
+				percent_cpu =	 (((float) (CURRENT_TASK->clk_ticks)) / total_num_ticks)*100.0;
+				percent_stack = (((float)(CURRENT_TASK->stack_end-CURRENT_TASK->sp))/stack_size)*100.0;
+				if( percent_stack < 0.0 ){
+					percent_stack = 0.0;
+				}
 				printf("ROOT\t");
-				printf("%02d\t", i);
-				printf("%08u\t", task_ticks[CURRENT_TASK->tid]);
-				printf("%02.1f\t", percent_cpu[i]);
-				printf("%d\t", stack_size[i]);
-				printf("%02.1f\t", percent_stack[i]);
+				printf("%02d\t", CURRENT_TASK->tid);
+				printf("%08u\t", CURRENT_TASK->clk_ticks);
+				printf("%02.1f\t", percent_cpu);
+				printf("%d\t", (stack_size));
+				printf("%02.1f\t", percent_stack);
 				
 				if( CURRENT_TASK->state == T_READY ){
-					printf("RDY\t\t0x%d\n", stack_array[i]);
+					printf("RDY\t\t0x%p\n", CURRENT_TASK);
 				}
 				else if( CURRENT_TASK->state == T_RUNNING ){
-					printf("RUN\t\t0x%d\n", stack_array[i]);
+					printf("RUN\t\t0x%p\n", CURRENT_TASK);
 				}
-			//}
+			}
 			CURRENT_TASK = CURRENT_TASK->next;
-		}	
+		}
 			
 	/*
 			PROTECTED SHARED RESOURCE (UART)
 	*/
-	//OS_Sem_Signal(sem);
+	//EnableInterrupts();
 }
 
 
@@ -261,3 +257,13 @@ void OS_Sem_Wait(unsigned int *sem){
 	*/	
 	EnableInterrupts();
 }
+
+/*
+__asm void OS_Suspend(void){
+	 	//LDR R0, #0xE000E010
+		//LDR R1, [R0]
+		ORR STCSR, #0x02 // load address of SysTick Control Register
+		//STR [R0], R1
+		BX LR				 
+}
+*/
