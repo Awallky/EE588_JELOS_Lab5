@@ -27,10 +27,9 @@ void Zero(void)
 										 ~(ROM_GPIOPinRead(PORTF_BASE_ADDR, 
 										 PIN_1)) );   // toggle LED
 		while(1){
-			//OS_Sem_Wait(sem);
+			OS_Sem_Wait(sem);
 			putchar('0'); //tasks should not end
-			//OS_Sem_Signal(sem);
-			//ps();
+			OS_Sem_Signal(sem);
 		}
 	}
 
@@ -40,9 +39,10 @@ void One(void)
 										 ~(ROM_GPIOPinRead(PORTF_BASE_ADDR,
 										 PIN_2)) );   // toggle Blue LED 
 		while(1){  
-			//OS_Sem_Wait(sem);
+			
+			OS_Sem_Wait(sem);
 			putchar('1');
-			//OS_Sem_Signal(sem);
+			OS_Sem_Signal(sem);
 		}
 	} 
 	

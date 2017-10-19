@@ -14,8 +14,9 @@ static TaskControlBlock task_list[NUM_TASKS], *TASK_LIST_PTR;
 static TaskControlBlock *CURRENT_TASK;
 unsigned int *sem;
 int i;
-int stack_size[5], task_ticks[5], stack_array[5], stack_start_array[5], stack_end_array[5];
-float percent_cpu[5], percent_stack[5];
+int stack_size[NUM_TASKS], task_ticks[NUM_TASKS], stack_array[NUM_TASKS];
+int stack_start_array[NUM_TASKS], stack_end_array[NUM_TASKS], percent_cpu[NUM_TASKS]; // Will change percent_cpu to float later on
+float percent_stack[NUM_TASKS];
 unsigned int total_num_ticks = 1;
 unsigned int ticks = 50000000;
 
@@ -84,8 +85,9 @@ int CreateTask(void (*func)(void),
 	return p->tid;
 	}
 
-/* Initialize the system.
- */
+/* 
+	Initialize the system.
+*/
 static void InitSystem(void)
 	{
 	int i;
@@ -125,7 +127,7 @@ unsigned char * Schedule(unsigned char * the_sp)
 		unsigned int val = ROM_SysTickValueGet();
 		total_num_ticks = 0;
 		
-	 CURRENT_TASK->clk_ticks = period - val + CURRENT_TASK->clk_ticks;
+	 CURRENT_TASK->clk_ticks = ROM_SysTickValueGet();
 	 CURRENT_TASK->sp = the_sp;
 	 CURRENT_TASK->state = T_READY;
 	 
@@ -133,7 +135,7 @@ unsigned char * Schedule(unsigned char * the_sp)
 
 	 if (CURRENT_TASK->state == T_READY){
 		  CURRENT_TASK->state = T_RUNNING;
-	    sp = CURRENT_TASK->sp;    
+	    sp = CURRENT_TASK->sp;
 			CURRENT_TASK->clk_ticks = 0;
 	 } else {     /* task->state == T_CREATED so make it "ready" 
 	                give it an interrupt frame and then launch it 
@@ -142,19 +144,22 @@ unsigned char * Schedule(unsigned char * the_sp)
 			sp = StartNewTask(CURRENT_TASK->sp,(uint32_t) CURRENT_TASK->func); // Does not return!
 		}
 		
+		/* Get the total number of ticks among all processes */
 		for(i = 0; i < NUM_TASKS; i++ ){
-			total_num_ticks += ((float)CURRENT_TASK->clk_ticks)/(float)ticks;
+			total_num_ticks += (CURRENT_TASK->clk_ticks);
+			task_ticks[CURRENT_TASK->tid] = CURRENT_TASK->clk_ticks;
+			//printf("CURRENT_TASK->clk_ticks: %d\n",CURRENT_TASK->clk_ticks);
 		}
+		
 		for(i = 0; i < NUM_TASKS; i++ ){
 			//f_stack_end = (int)CURRENT_TASK->stack_end;
 			//f_sp = (int)CURRENT_TASK->sp;
 			//printf("ticks: %u\n", CURRENT_TASK->clk_ticks);
-			task_ticks[CURRENT_TASK->tid] = CURRENT_TASK->clk_ticks;	
 			stack_array[CURRENT_TASK->tid] = (int)CURRENT_TASK->sp;	
 			stack_end_array[CURRENT_TASK->tid] = (int)CURRENT_TASK->stack_end;
 			stack_start_array[CURRENT_TASK->tid] = (int)CURRENT_TASK->stack_start;
 			stack_size[CURRENT_TASK->tid] = (stack_end_array[CURRENT_TASK->tid]-stack_start_array[CURRENT_TASK->tid]+1);
-			percent_cpu[CURRENT_TASK->tid] =	 ((float)task_ticks[CURRENT_TASK->tid] * 100.0) / ((float)total_num_ticks); // / (float)total_num_ticks;
+			percent_cpu[CURRENT_TASK->tid] = ((float)(100/NUM_TASKS)); /// ((float)total_num_ticks); // / (float)total_num_ticks;
 			percent_stack[CURRENT_TASK->tid] = (float)((stack_end_array[CURRENT_TASK->tid]-stack_array[CURRENT_TASK->tid])*100.0)/ stack_size[CURRENT_TASK->tid];
 			
 			CURRENT_TASK = CURRENT_TASK->next;
@@ -192,25 +197,30 @@ void ps(void){
 			PROTECTED SHARED RESOURCE (UART)
 	*/
 	
-	printf("\nUSER\tTID\tTICKS\t\t%%CPU\tSTK_SZ\t%%STK\tSTATE\t\tADDR\n");
+	printf("\nUSER\tTID\t%%CPU\tSTK_SZ\t%%STK\tSTATE\t\tADDR\n");
 	for( i = 0; i < NUM_TASKS; i++ ){
 			//if(CURRENT_TASK->tid != 0){
 				printf("ROOT\t");
 				printf("%02d\t", i);
-				printf("%08u\t", task_ticks[CURRENT_TASK->tid]);
-				printf("%02.1f\t", percent_cpu[i]);
-				printf("%d\t", stack_size[i]);
-				printf("%02.1f\t", percent_stack[i]);
+				//printf("%08u\t", task_ticks[CURRENT_TASK->tid]);
+				if( i!=0){
+					printf("%d.0\t", percent_cpu[i]);
+					printf("%d\t", stack_size[i]);
+					printf("%02.1f\t", percent_stack[i]);
+				}
+				else{
+					printf("00.0\t%d\t00.0\t", stack_size[i]);
+				}				
 				
 				if( CURRENT_TASK->state == T_READY ){
-					printf("RDY\t\t0x%d\n", stack_array[i]);
+					printf("RDY\t\t0x%x\n", stack_array[i]);
 				}
 				else if( CURRENT_TASK->state == T_RUNNING ){
-					printf("RUN\t\t0x%d\n", stack_array[i]);
+					printf("RUN\t\t0x%x\n", stack_array[i]);
 				}
 			//}
 			CURRENT_TASK = CURRENT_TASK->next;
-		}	
+		}
 			
 	/*
 			PROTECTED SHARED RESOURCE (UART)

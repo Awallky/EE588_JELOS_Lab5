@@ -10,6 +10,7 @@
 void prmsg(char *);
 int strcmp(const char *s1, const char *s2);
 
+extern unsigned int *sem;
 // -----------------------------------------------------------------
 // SHELL BUILT_IN FUNCTIONS
 // -----------------------------------------------------------------
@@ -49,7 +50,6 @@ void temp(void)
 int a;
 
  // Do analog to digital conversion and print the result
-
   printf("\nvalue is %d\n",a);  // request a single conversion
 }
 // -----------------------------------------------------------------
@@ -82,7 +82,6 @@ void  parse(char *line, char **argv)
      
 void  execute(char **argv)
 { unsigned char i;
-
   printf("fork-exec: ");
 
   for(i=0;i<9;i++){
@@ -91,8 +90,8 @@ void  execute(char **argv)
     prmsg(argv[i]);
 	  putchar(' ');
   }
+	
   printf("\n");
-
 }
 
 // -----------------------------------------------------------------
@@ -104,34 +103,39 @@ void  shell(void)
      char  line[40] = {0};          /* the input line init all chars to zero  */
      char  *argv[10] = {0};              /* the command line argument      */
 //	 unsigned char i;
-
+		 
      while (1) {                   /* repeat until done ....         */
+					OS_Sem_Wait(sem);
           printf("jelos# ");     /*   display a prompt             */
+					
 		      gets(line);          // get a line from the user
           parse(line, argv);       /*   parse the line               */
           if (strcmp(argv[0], "exit") == 0 || strcmp(argv[0], "quit") == 0 ) {
 		                   /* is it an "exit"?     */
                 printf("Exiting...\n");
-				return;
+					OS_Sem_Signal(sem);
+					return;
 
-				//exit(0);            
-	      } else if (strcmp(argv[0], "time") == 0)
-		      time();   //time(argv[1]);
+					} 
+					else if (strcmp(argv[0], "time") == 0)
+						time();   //time(argv[1]);
 					else if (strcmp(argv[0], "ps") == 0){
 						//DisableInterrupts();
 						ps();
 						//EnableInterrupts();
 					}
 	        else if (strcmp(argv[0], "settime") == 0)
-		      settime(argv[1]);   //settime(argv[1]);
+						settime(argv[1]);   //settime(argv[1]);
           else if (strcmp(argv[0], "temp") == 0)
-		      temp();   //temp(argv[1]);
+						temp();   //temp(argv[1]);
 					else if (strcmp(argv[0], "i") == 0)
-		      puts("an i\n");   //
+						puts("an i\n");   //
 					else if (*argv[0] != 0 && argv[0] != 0) 
-		      execute(argv);    /* if not empy line execute command as new process*/
+						execute(argv);    /* if not empy line execute command as new process*/
 					else	
-					putchar('\n');
+						putchar('\n');
+					
+					OS_Sem_Signal(sem);
      }//while(1)
 }
 
